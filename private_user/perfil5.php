@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-
 session_start();
-if(!isset($_SESSION["email_address"])){
-    header("location:../login.html");
+if (!isset($_SESSION["email_address"])) {
+    echo "<script>window.location.href = '../login.html';</script>";
+    exit(); // Asegura que el script se detenga después de redirigir
+}
 
-} 
+require_once("include/connection.php");
 
+// Obtén la información del usuario
+$id = mysqli_real_escape_string($conn, $_SESSION['email_address']);
+$r = mysqli_query($conn, "SELECT * FROM login_user WHERE id = '$id'") or die(mysqli_error($conn));
+$row = mysqli_fetch_array($r);
+
+// Verifica la carrera y la sede del usuario
+$carrera = $row['carrera']; // Asegúrate de que el nombre de la columna sea correcto
+$sede = $row['sede']; // Asegúrate de que el nombre de la columna sea correcto
+
+if ($carrera != 'Ingeniería Civil Informática' || $sede != 'Sede Santiago') {
+    // El usuario no tiene permisos para acceder
+    echo "<script>alert('No tienes permisos para acceder a esta página.');";
+    echo "window.history.back();</script>";
+    exit();
+}
 ?>
 <head>
   <meta charset="utf-8">
@@ -86,7 +102,59 @@ height:0;
         background: url('img/lg.flip-book-loader.gif') 50% 50% no-repeat rgb(249,249,249);
         opacity: 1;
     }
-  </style>
+    .sidebar-fixed {
+        background-color: #343a40; /* Color de fondo del sidebar */
+        color: #fff; /* Color del texto en el sidebar */
+        height: 100vh; /* Altura del sidebar para ocupar toda la pantalla vertical */
+        width: 250px; /* Ancho del sidebar */
+        position: fixed; /* Mantener fijo */
+        top: 0;
+        left: 0; /* Alineado a la izquierda */
+        padding-top: 130px; /* Espaciado superior */
+        z-index: 1; /* Asegura que esté encima del contenido */
+        overflow-y: auto; /* Agrega desplazamiento vertical si es necesario */
+        transition: width 0.3s ease; /* Agrega una transición suave */
+    }
+        #content {
+        margin-left: 250px; /* Margen izquierdo para dejar espacio al sidebar */
+        padding: 15px;
+        transition: margin-left 0.3s ease; /* Transición suave para el margen izquierdo */
+    }
+    @media (max-width: 768px) {
+    /* Estilo para el botón de hamburguesa en el navbar */
+    .navbar-toggler {
+        display: block; /* Mostrar el botón de hamburguesa en dispositivos pequeños */
+    }
+
+    /* Ocultar el sidebar por defecto en pantallas más pequeñas */
+    .sidebar-fixed {
+        width: 0;
+        /* ... (otros estilos de ocultamiento) ... */
+    }
+
+    /* Estilos para el contenido principal */
+    #content {
+        margin-left: 0; /* Ajustar el margen para el contenido principal */
+    }
+
+    /* Mostrar el sidebar cuando está activo (al hacer clic en la hamburguesa) */
+    .sidebar-fixed.active {
+        width: 250px; /* Ancho del sidebar */
+        /* ... (otros estilos al activar) ... */
+    }
+
+}
+.sidebar-fixed a.list-group-item {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+}
+
+.sidebar-fixed a.list-group-item:hover {
+    background-color: #dd211c;
+    color: #fff;
+}
+    </style>
 
     <script src="jquery.min.js"></script>
 <script type="text/javascript">
@@ -115,9 +183,9 @@ height:0;
 
   $row = mysqli_fetch_array($r);
 
-   $id=$row['email_address'];
-   $user_status=$row['user_status'];
-   $name=$row['name'];
+  $id=$row['email_address'];
+  $user_status=$row['user_status'];
+  $name=$row['name'];
    // $lname=$row['lname'];
 
 ?>
@@ -136,7 +204,6 @@ height:0;
                         <font color="white">Bienvenido!,</font> <?php echo ucwords(htmlentities($id)); ?> <i class="fas fa-user-circle"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-                        <a class=> <i class="fas fa-chalkboard-teacher"></i> Usuario logeado</a>
                         <a class="dropdown-item" href="Logout.php"><i class="fas fa-sign-in-alt"></i> Cerrar sesión</a>
                     </div>
                 </li>
@@ -150,15 +217,17 @@ height:0;
 <div class="sidebar-fixed position-fixed">
     <div class="list-group list-group-flush">
         <a href="home5.php" class="list-group-item list-group-item-action waves-effect">
-            <i class="fas fa-folder-open"></i> Ver archivos cargados
+          <i class="fas fa-folder-open mr-3"></i>Ver archivos cargados
         </a>
         <a href="add_file5.php" class="list-group-item list-group-item-action waves-effect">
-            <i class="fas fa-file-medical"></i> Agregar documentos
+          <i class="fas fa-file-medical mr-3"></i>Agregar documentos
         </a>
-        <a href="perfil5.php" class="list-group-item list-group-item-action waves-effect" data-toggle="modal"
-            data-target="#modalRegisterForm2">
-            <i class="fas fa-user mr-3"></i>Perfil
+        <a href="#" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-user mr-3"></i>Perfil
         </a>
+        <!-- <a href="recibidos.php" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-share-alt"></i> &nbsp;&nbsp;&nbsp;Archivos recibidos 
+        </a> -->
     </div>
 </div>
 
@@ -307,6 +376,19 @@ height:0;
    };
    
 
-   
+   document.addEventListener("DOMContentLoaded", function() {
+        const sidebar = document.querySelector('.sidebar-fixed');
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+
+        toggleBtn.addEventListener('click', function() {
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'block';
+                toggleBtn.textContent = 'Ocultar Menú';
+            } else {
+                sidebar.style.display = 'none';
+                toggleBtn.textContent = 'Mostrar Menú';
+            }
+        });
+    });
    
 </script>

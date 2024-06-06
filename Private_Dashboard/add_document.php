@@ -232,7 +232,6 @@ position:absolute;
       </div>
     </nav>
     <!-- Navbar -->
-
     <!-- Sidebar -->
     <div class="sidebar-fixed position-fixed">
 
@@ -243,29 +242,234 @@ position:absolute;
 
          <div class="list-group list-group-flush">
         <a href="dashboard.php" class="list-group-item active waves-effect">
-          <i class="fas fa-chart-pie mr-3"></i>Dashboard
-        </a>
-         <a href="#" class="list-group-item list-group-item-action waves-effect"  data-toggle="modal" data-target="#modalRegisterForm">
+          <i class="fas fa-chart-pie mr-3"></i>Dashboard</a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect" data-toggle="modal" data-target="#modalAgregarRamo">
+          <i class="fas fa-book mr-3"></i>Agregar ramo</a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect"  data-toggle="modal" data-target="#modalRegisterForm">
           <i class="fas fa-user mr-3"></i>Agregar administradores</a>
-            <a href="view_admin.php" class="list-group-item list-group-item-action waves-effect">
+        <a href="view_admin.php" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-users"></i> Ver administradores</a>
         <a href="#" class="list-group-item list-group-item-action waves-effect" data-toggle="modal" data-target="#modalRegisterForm2">
           <i class="fas fa-user mr-3"></i>Agregar usuarios</a>
-           <a href="view_user.php" class="list-group-item list-group-item-action waves-effect">
+        <a href="view_user.php" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-users"></i>  Ver usuarios</a>
         <a href="add_document.php" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-file-medical"></i> Agregar documentos</a>
         <a href="view_userfile.php" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-folder-open"></i> Ver archivos cargados</a>
-            <a href="admin_log.php" class="list-group-item list-group-item-action waves-effect">
+        <a href="admin_log.php" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-chalkboard-teacher"></i> Admin logs</a>
-              <a href="user_log.php" class="list-group-item list-group-item-action waves-effect">
+        <a href="user_log.php" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-chalkboard-teacher"></i> Usuarios logs</a>
     <!--     <a href="#" class="list-group-item list-group-item-action waves-effect">
           <i class="fas fa-money-bill-alt mr-3"></i>Orders</a> -->
       </div>
 
     </div>
+    
+    <div class="modal fade" id="modalAgregarRamo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form action="ramo.php" method="POST">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div style="text-align: center;">
+                        <button id="btnAgregar" class="btn btn-primary">Agregar Ramo</button>
+                        <button id="btnVer" class="btn btn-secondary">Ver Detalles del Ramo</button>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3" id="agregarRamoView">
+                    <!-- Campos para el ramo y código de ramo -->
+                    <div class="md-form mb-4">
+                        <i class="fas fa-book prefix grey-text"></i>
+                        <input type="text" id="nombreRamo" name="nombreRamo" class="form-control validate" required="">
+                        <label data-error="X" data-success="✓" for="nombreRamo">Nombre del Ramo</label>
+                    </div>
+                    <div class="md-form mb-4">
+                        <i class="fas fa-key prefix grey-text"></i>
+                        <input type="text" id="codigoRamo" name="codigoRamo" class="form-control validate" required="">
+                        <label data-error="X" data-success="✓" for="codigoRamo">Código del Ramo</label>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="periodoRamo" name="periodoRamo" required>
+                            <option value="" disabled selected>Elegir periodo</option>
+                            <option value="otoño">Otoño</option>
+                            <option value="primavera">Primavera</option>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="añoRamo" name="añoRamo" required>
+                            <option value="" disabled selected>Elegir año</option>
+                            <?php
+                            $currentYear = date("Y");
+                            for ($year = 2000; $year <= $currentYear; $year++) {
+                                echo "<option value=\"$year\">$year</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="nivelRamo" name="nivelRamo" required>
+                            <option value="" disabled selected>Elegir nivel</option>
+                            <?php
+                            for ($nivel = 1; $nivel <= 11; $nivel++) {
+                                echo "<option value=\"$nivel\">$nivel</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="sedeRamo" name="sedeRamo" required>
+                            <option value="" disabled selected>Elegir sede</option>
+                            <option value="Sede Temuco">Sede Temuco</option>
+                            <option value="Sede Talca">Sede Talca</option>
+                            <option value="Sede Santiago">Sede Santiago</option>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="carreraRamo" name="carreraRamo" required>
+                            <option value="" disabled selected>Elegir carrera</option>
+                            <option value="Ingeniería Civil Química">Ingeniería Civil Química</option>
+                            <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
+                            <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
+                            <!-- Agrega más opciones según tus necesidades -->
+                        </select>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button class="btn btn-info" name="agregarRamo">Agregar</button>
+                    </div>
+                
+      
+
+
+                    
+                </div>
+          <div class="modal-body mx-3" id="verRamoView" style="display: none;">
+        <!-- Formulario para editar los detalles del ramo -->
+       <!-- Formulario para editar los detalles del ramo -->
+       <?php
+require_once("include/connection.php");
+
+// Obtener las sedes y carreras disponibles
+$sedes = ["Sede Temuco", "Sede Talca", "Sede Santiago"];
+$carreras = ["Ingeniería Civil Química", "Ingeniería Civil Informática", "Ingeniería Civil Industrial"];
+
+// Filtrar por sede y carrera seleccionadas
+$sedeSeleccionada = isset($_GET['sede']) ? $_GET['sede'] : null;
+$carreraSeleccionada = isset($_GET['carrera']) ? $_GET['carrera'] : null;
+
+$query = "SELECT * FROM ramos";
+if ($sedeSeleccionada && $carreraSeleccionada) {
+    $query .= " WHERE sede='$sedeSeleccionada' AND carrera='$carreraSeleccionada'";
+}
+
+$result = mysqli_query($conn, $query);
+
+// Botones de filtrar
+echo "<div class='mb-3'>";
+echo "<label for='sedeSeleccionada'><strong>Seleccionar Sede:</strong></label>";
+echo "<select id='sedeSeleccionada' name='sedeRamoEditar' class='browser-default custom-select'>";
+echo "<option value='' disabled selected>Seleccionar Sede</option>";
+foreach ($sedes as $sede) {
+    echo "<option value='$sede'>$sede</option>";
+}
+echo "</select>";
+echo "</div>";
+
+echo "<div class='mb-3'>";
+echo "<label for='carreraSeleccionada'><strong>Seleccionar Carrera:</strong></label>";
+echo "<select id='carreraSeleccionada' name='carreraRamoEditar' class='browser-default custom-select'>";
+echo "<option value='' disabled selected>Seleccionar Carrera</option>";
+foreach ($carreras as $carrera) {
+    echo "<option value='$carrera'>$carrera</option>";
+}
+echo "</select>";
+echo "</div>";
+
+// Botón de filtrar
+echo "<button type='button' id='filtrarBtn' class='btn btn-primary'>Filtrar</button>";
+
+$count = 0; // Inicializar la variable $count
+
+// Mostrar formularios filtrados
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<div class='ramo-form-container' data-form-index='$count' style='display: none;'>";
+    echo "<form action='ramo.php' method='POST' class='mb-3'>";
+    // Campos comunes
+    echo "<div class='mb-3'>";
+    echo "<label for='nombreRamoEditarNuevo'><strong>Nombre del Ramo:</strong></label>";
+    echo "<input type='hidden' name='nombreRamoEditar' value='".$row['nombre_ramo']."'>";
+    echo "<input type='text' name='nombreRamoEditarNuevo' value='".$row['nombre_ramo']."' class='form-control'>";
+    echo "</div>";
+
+    echo "<div class='mb-3'>";
+    echo "<label for='codigoRamoEditar'><strong>Código del Ramo:</strong></label>";
+    echo "<input type='text' name='codigoRamoEditar' value='".$row['codigo_ramo']."' class='form-control'>";
+    echo "</div>";
+
+     // Campos dinámicos
+     $camposDinamicos = ['año', 'nivel', 'periodo', 'sede', 'carrera'];
+
+     foreach ($camposDinamicos as $campo) {
+        echo "<div class='mb-3'>";
+        echo "<label for='{$campo}Seleccionado'><strong>".ucwords($campo).":</strong></label>";
+        echo "<input id='{$campo}Seleccionado' type='text' name='{$campo}RamoEditar' value='".$row[$campo]."' class='form-control' placeholder='".$row[$campo]."' readonly>";
+        echo "<select name='{$campo}RamoEditar' class='browser-default custom-select' style='display:none'>";
+        
+        switch ($campo) {
+            case 'año':
+                $currentYear = date('Y');
+                for ($i = 2000; $i <= $currentYear; $i++) {
+                    echo "<option value='$i' ".($row[$campo] == $i ? 'selected' : '').">$i</option>";
+                }
+                break;
+            case 'nivel':
+                for ($i = 1; $i <= 11; $i++) {
+                    echo "<option value='$i' ".($row[$campo] == $i ? 'selected' : '').">$i</option>";
+                }
+                break;
+            case 'periodo':
+                echo "<option value='otoño' ".($row[$campo] == 'otoño' ? 'selected' : '').">Otoño</option>";
+                echo "<option value='primavera' ".($row[$campo] == 'primavera' ? 'selected' : '').">Primavera</option>";
+                break;
+            case 'sede':
+                foreach ($sedes as $sede) {
+                    echo "<option value='$sede' ".($row[$campo] == $sede ? 'selected' : '').">$sede</option>";
+                }
+                break;
+            case 'carrera':
+                foreach ($carreras as $carrera) {
+                    echo "<option value='$carrera' ".($row[$campo] == $carrera ? 'selected' : '').">$carrera</option>";
+                }
+                break;
+        }
+
+        echo "</select>";
+        echo "<button type='button' class='btn btn-sm btn-primary editar' onclick='activarEdicionCampo(this, \"$campo\")'>Editar ".ucwords($campo)."</button>";
+        echo "<button type='button' class='btn btn-sm btn-secondary cancelar-edit' onclick='cancelarEdicionCampo(this, \"$campo\")' style='display:none'>Cancelar Edición</button>";
+        echo "</div>";
+    }
+
+    echo "<button type='submit' class='btn btn-sm btn-success' name='guardarEdicion'>Guardar</button>";
+    echo "<button type='submit' class='btn btn-sm btn-danger' name='eliminarRamo'>Eliminar</button><hr>";
+    echo "</form>";
+    echo "</div>";
+
+    $count++;
+}
+?>
+
+
+    </div>
+
+
+               
+            </div>
+        </div>
+    </form>
+</div>
   <!--Add admin-->
   <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
   aria-hidden="true">
@@ -298,10 +502,37 @@ position:absolute;
           <label data-error="X" data-success="✓" for="orangeForm-pass">Contraseña</label>
         </div>
 
-        <div class="md-form mb-4">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input type="text" id="orangeForm-pass" name="admin_status" value = "Admin" class="form-control validate" readonly="">
-          <label data-error="X" data-success="✓" for="orangeForm-pass">Tipo de usuario</label>
+        <div class="md-form mb-5">
+            <i class="fas fa-user prefix grey-text"></i><br><br>
+            <select id="orangeForm-tipo" name="admin_status" class="form-control validate" required="" style="margin-left: 0.5rem;">
+              <option value="" disabled selected></option>
+              <option value="Admin">Admin</option>
+              <option value="Decano">Decano</option>
+              <option value="Secretaria">Secretaria</option>
+            </select>
+            <label data-error="X" data-success="✓" for="orangeForm-sede">Tipo de Usuario</label>
+          </div>
+        
+        <div class="md-form mb-5">
+            <i class="fas fa-university prefix grey-text"></i><br><br>
+            <select id="orangeForm-carrera" name="carrera" class="form-control validate" style="margin-left: 0.5rem;" onchange="updateSedeOptions()">
+              <option value="" disabled selected></option>
+              <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
+              <option value="Ingeniería Civil Química">Ingeniería Civil Química</option>
+              <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
+            </select>
+            <label data-error="X" data-success="✓" for="orangeForm-carrera">Carrera</label>
+        </div>
+
+        <div class="md-form mb-5">
+            <i class="fas fa-university prefix grey-text"></i><br><br>
+            <select id="orangeForm-sede" name="sede" class="form-control validate" style="margin-left: 0.5rem;">
+              <option value="" disabled selected></option>
+              <option value="Sede Temuco">Sede Temuco</option>
+              <option value="Sede Talca">Sede Talca</option>
+              <option value="Sede Santiago">Sede Santiago</option>
+            </select>
+            <label data-error="X" data-success="✓" for="orangeForm-sede">Sede</label>
         </div>
 
       </div>
@@ -312,6 +543,56 @@ position:absolute;
   </div>
 </div>
 </form>
+
+<script>
+
+function updateSedeOptions() {
+        var carreraSelect = document.getElementById("orangeForm-carrera");
+        var sedeSelect = document.getElementById("orangeForm-sede");
+
+        // Obtener el valor seleccionado de la carrera
+        var selectedCarrera = carreraSelect.options[carreraSelect.selectedIndex].value;
+
+        // Limpiar las opciones actuales de la sede
+        sedeSelect.innerHTML = '<option value="" disabled selected></option>';
+
+        // Añadir la opción de "Sede Santiago" solo si la carrera seleccionada es "Ingeniería Civil Química"
+        if (selectedCarrera === "Ingeniería Civil Química") {
+            sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+        } else {
+            // Añadir las opciones para las otras carreras
+            sedeSelect.innerHTML += '<option value="Sede Temuco">Sede Temuco</option>';
+            sedeSelect.innerHTML += '<option value="Sede Talca">Sede Talca</option>';
+            sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+        }
+    }
+    
+  document.addEventListener("DOMContentLoaded", function () {
+    // Obtener elementos del DOM
+    var tipoUsuarioSelect = document.getElementById("orangeForm-tipo");
+    var carreraSection = document.getElementById("orangeForm-carrera").closest(".md-form");
+    var sedeSection = document.getElementById("orangeForm-sede").closest(".md-form");
+
+    // Ocultar secciones al cargar la página
+    carreraSection.style.display = "none";
+    sedeSection.style.display = "none";
+
+    // Agregar un evento de cambio al campo "Tipo de Usuario"
+    tipoUsuarioSelect.addEventListener("change", function () {
+      // Obtener el valor seleccionado
+      var tipoUsuario = tipoUsuarioSelect.value;
+
+      // Mostrar u ocultar las secciones según el valor seleccionado
+      if (tipoUsuario === "Admin") {
+        carreraSection.style.display = "block";
+        sedeSection.style.display = "block";
+      } else {
+        carreraSection.style.display = "none";
+        sedeSection.style.display = "none";
+      }
+    });
+  });
+</script>
 <!--end modaladmin-->
   <!--Add user-->
   <div class="modal fade" id="modalRegisterForm2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -335,21 +616,21 @@ position:absolute;
             <input type="email" id="orangeForm-email" name="email_address" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-email">Correo</label>
           </div>
+          
           <div class="md-form mb-4">
             <i class="fas fa-lock prefix grey-text"></i>
             <input type="password" id="orangeForm-pass" name="user_password" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-pass">Contraseña</label>
           </div>
+
           <div class="md-form mb-4">
             <i class="fas fa-user prefix grey-text"></i><br><br>
             <label data-error="X" data-success="✓" for="orangeForm-user_status">Tipo de usuario</label>
             <select id="orangeForm-user_status" name="user_status" class="form-control validate" required="" style="margin-left: 0.5rem;">
               <option value="" disabled selected></option>
               <option value="Profesor">Profesor(a)</option>
-              <option value="Secretaria">Secretaria(o)</option>
               <option value="Presidente">Presidente Comité</option>
-              <option value="Director">Director</option>
-              <option value="Decano">Decano</option>
+              <option value="Secretario(a) de Estudios">Secretario(a) de Estudios</option>
             </select>
             
           </div>
@@ -358,36 +639,41 @@ position:absolute;
             <input type="date" id="orangeForm-date" name="fecha_de_nacimiento" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-date">Fecha de Nacimiento</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-id-card prefix grey-text"></i>
             <input type="text" id="orangeForm-rut" name="rut" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-rut">RUT</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-university prefix grey-text"></i><br><br>
-            <select id="orangeForm-carrera" name="carrera" class="form-control validate" required="" style="margin-left: 0.5rem;">
+            <select id="carrera" name="carrera" class="form-control validate" required="" style="margin-left: 0.5rem;" onchange="updateSede()">
               <option value="" disabled selected></option>
               <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
               <option value="Ingeniería Civil Química">Ingeniería Civil Química</option>
               <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
             </select>
-            <label data-error="X" data-success="✓" for="orangeForm-carrera">Carrera</label>
+            <label data-error="X" data-success="✓" for="carrera">Carrera</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-university prefix grey-text"></i><br><br>
-            <select id="orangeForm-sede" name="sede" class="form-control validate" required="" style="margin-left: 0.5rem;">
+            <select id="sede" name="sede" class="form-control validate" required="" style="margin-left: 0.5rem;">
               <option value="" disabled selected></option>
               <option value="Sede Temuco">Sede Temuco</option>
               <option value="Sede Talca">Sede Talca</option>
               <option value="Sede Santiago">Sede Santiago</option>
             </select>
-            <label data-error="X" data-success="✓" for="orangeForm-sede">Sede</label>
+            <label data-error="X" data-success="✓" for="sede">Sede</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-image prefix grey-text"></i>
             <input type="file" id="orangeForm-foto" name="foto_de_perfil" class="form-control-file" required="">
             <label data-error="X" data-success="✓" for="orangeForm-foto"></label>
           </div>
+
         </div>
         <div class="modal-footer d-flex justify-content-center">
           <button class="btn btn-info" name="reguser">Agregar</button>
@@ -397,47 +683,66 @@ position:absolute;
   </form>
 </div>
 
+<script>
 
+function updateSede() {
+      var carreraSelect = document.getElementById("carrera");
+      var sedeSelect = document.getElementById("sede");
 
-  <script>
-    function validarRut(rut) {
-      var rutRegex = /^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])|(\d{8}-[\dkK])$/;
+      // Obtener el valor seleccionado de la carrera
+      var selectedCarrera = carreraSelect.options[carreraSelect.selectedIndex].value;
 
-      if (!rut.match(rutRegex)) {
-        return false; // El RUT no cumple con el formato
+      // Limpiar las opciones actuales de la sede
+      sedeSelect.innerHTML = '<option value="" disabled selected></option>';
+
+      // Añadir la opción de "Sede Santiago" solo si la carrera seleccionada es "Ingeniería Civil Química"
+      if (selectedCarrera === "Ingeniería Civil Química") {
+          sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+      } else {
+          // Añadir las opciones para las otras carreras
+          sedeSelect.innerHTML += '<option value="Sede Temuco">Sede Temuco</option>';
+          sedeSelect.innerHTML += '<option value="Sede Talca">Sede Talca</option>';
+          sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
       }
+  }
 
-      var rutPartes = rut.split('-');
-      var rutNumero = rutPartes[0].replace(/\./g, '');
-      var rutVerificador = rutPartes[1];
+  function validarRut(rut) {
+    var rutRegex = /^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])|(\d{8}-[\dkK])$/;
 
-      var suma = 0;
-      var multiplo = 2;
-
-      for (var i = rutNumero.length - 1; i >= 0; i--) {
-        suma += parseInt(rutNumero.charAt(i)) * multiplo;
-        multiplo = multiplo === 7 ? 2 : multiplo + 1;
-      }
-
-      var resultado = suma % 11 === 0 ? 0 : 11 - (suma % 11);
-      var verificador = rutVerificador.toLowerCase() === 'k' ? 10 : parseInt(rutVerificador);
-
-      return resultado === verificador;
+    if (!rut.match(rutRegex)) {
+      return false; // El RUT no cumple con el formato
     }
 
-    function validarFormulario() {
-      var rutInput = document.getElementById("orangeForm-rut");
-      var rut = rutInput.value;
+    var rutPartes = rut.split('-');
+    var rutNumero = rutPartes[0].replace(/\./g, '');
+    var rutVerificador = rutPartes[1];
 
-      if (!validarRut(rut)) {
-        alert("El RUT ingresado no es válido.");
-        return false;
-      }
+    var suma = 0;
+    var multiplo = 2;
 
-      return true;
+    for (var i = rutNumero.length - 1; i >= 0; i--) {
+      suma += parseInt(rutNumero.charAt(i)) * multiplo;
+      multiplo = multiplo === 7 ? 2 : multiplo + 1;
     }
-  </script>
-</div>
+
+    var resultado = suma % 11 === 0 ? 0 : 11 - (suma % 11);
+    var verificador = rutVerificador.toLowerCase() === 'k' ? 10 : parseInt(rutVerificador);
+
+    return resultado === verificador;
+  }
+
+  function validarFormulario() {
+    var rutInput = document.getElementById("orangeForm-rut");
+    var rut = rutInput.value;
+
+    if (!validarRut(rut)) {
+      alert("El RUT ingresado no es válido.");
+      return false;
+    }
+
+    return true;
+  }
+</script>
 <!--end modaluser-->
 
   </header>
@@ -487,7 +792,7 @@ position:absolute;
     <th>Nombre del archivo</th>
     <th>Tamaño</th>
     <th>Subido por</th>
-     <th>Estado</th>   
+    <th>Estado</th>   
     <th>Fecha de subida</th>
     <th>Descargas</th>
     <th>Acción</th>
@@ -555,6 +860,114 @@ position:absolute;
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css">
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/responsive/1.0.3/js/dataTables.responsive.js"></script>
 
-</body>
+<script>
+    document.getElementById('btnAgregar').addEventListener('click', function() {
+        document.getElementById('agregarRamoView').style.display = 'block';
+        document.getElementById('verRamoView').style.display = 'none';
+    });
 
+    document.getElementById('btnVer').addEventListener('click', function() {
+        document.getElementById('verRamoView').style.display = 'block';
+        document.getElementById('agregarRamoView').style.display = 'none';
+    });
+</script>
+
+<!-- Script de AJAX y manipulación del DOM -->
+<script>
+    document.getElementById('btnVer').addEventListener('click', function () {
+        var codigoRamo = document.getElementById('codigoRamo').value;
+
+        $.ajax({
+            url: 'obtener_detalles_ramo.php',
+            type: 'GET',
+            data: { codigo_ramo: codigoRamo },
+            success: function(response) {
+                var detallesRamo = JSON.parse(response);
+
+                document.getElementById('nombreRamoVer').innerText = detallesRamo.nombre_Ramo;
+                document.getElementById('codigoRamoVer').innerText = detallesRamo.codigo_ramo;
+                document.getElementById('periodoRamoVer').innerText = detallesRamo.periodo;
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+
+    // AJAX para obtener detalles del ramo con sede y carrera
+    document.getElementById('btnVer').addEventListener('click', function () {
+        var sedeSeleccionada = document.getElementById('sedeSeleccionada').value;
+        var carreraSeleccionada = document.getElementById('carreraSeleccionada').value;
+        var codigoRamo = document.getElementById('codigoRamo').value;
+
+        $.ajax({
+            url: 'obtener_detalles_ramo.php',
+            type: 'GET',
+            data: { codigo_ramo: codigoRamo, sede: sedeSeleccionada, carrera: carreraSeleccionada },
+            success: function (response) {
+                var detallesRamo = JSON.parse(response);
+
+                document.getElementById('nombreRamoVer').innerText = detallesRamo.nombre_Ramo;
+                document.getElementById('codigoRamoVer').innerText = detallesRamo.codigo_ramo;
+                document.getElementById('periodoRamoVer').innerText = detallesRamo.periodo;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+</script>
+
+<!-- Script de filtrado con jQuery -->
+<script>
+    $(document).ready(function() {
+        // Ocultar todos los formularios al cargar la página
+        $('.ramo-form-container').hide();
+
+        // Manejar el evento del botón de filtrar
+        $('#filtrarBtn').on('click', function() {
+            var sedeSeleccionada = $('#sedeSeleccionada').val();
+            var carreraSeleccionada = $('#carreraSeleccionada').val();
+
+            // Mostrar solo los formularios que cumplen con la selección
+            $('.ramo-form-container').each(function() {
+                var formSede = $(this).find('[name="sedeRamoEditar"]').val();
+                var formCarrera = $(this).find('[name="carreraRamoEditar"]').val();
+
+                if ((sedeSeleccionada === '' || sedeSeleccionada === formSede) &&
+                    (carreraSeleccionada === '' || carreraSeleccionada === formCarrera)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+
+    // Scripts adicionales relacionados con la manipulación del DOM
+    function activarEdicionCampo(button, campo) {
+        var divCampo = button.parentNode.querySelector('#' + campo + 'Seleccionado');
+        var selectCampo = button.parentNode.querySelector('select[name=' + campo + 'RamoEditar]');
+        var cancelarEdicionBtn = button.parentNode.querySelector('.cancelar-edit');
+
+        divCampo.style.display = 'none';
+        selectCampo.style.display = 'block';
+        cancelarEdicionBtn.style.display = 'inline-block';
+        button.style.display = 'none';
+    }
+
+    function cancelarEdicionCampo(button, campo) {
+        var divCampo = button.parentNode.querySelector('#' + campo + 'Seleccionado');
+        var selectCampo = button.parentNode.querySelector('select[name=' + campo + 'RamoEditar]');
+        var cancelarEdicionBtn = button.parentNode.querySelector('.cancelar-edit');
+        var editarBtn = button.parentNode.querySelector('.editar');
+
+        divCampo.style.display = 'block';
+        selectCampo.style.display = 'none';
+        cancelarEdicionBtn.style.display = 'none';
+        editarBtn.style.display = 'inline-block';
+    }
+</script>
+
+</body>
 </html>

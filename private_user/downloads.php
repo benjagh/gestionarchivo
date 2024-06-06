@@ -6,7 +6,7 @@ if (isset($_GET['file_id'])) {
     $id = mysqli_real_escape_string($conn,$_GET['file_id']);
 
     // fetch file to download from database
-    $sql = "SELECT * FROM  upload_files WHERE ID=$id";
+    $sql = "SELECT * FROM  upload_info_talca WHERE ID=$id";
     $result = mysqli_query($conn, $sql);
 
     $file = mysqli_fetch_assoc($result);
@@ -24,12 +24,10 @@ if (isset($_GET['file_id'])) {
 
         // Now update downloads count
         $newCount = $file['DOWNLOAD'] + 1;
-        $updateQuery = "UPDATE upload_files SET DOWNLOAD=$newCount WHERE ID=$id";
+        $updateQuery = "UPDATE upload_info_talca SET DOWNLOAD=$newCount WHERE ID=$id";
         mysqli_query($conn, $updateQuery);
         exit;
     }
 
 }
-
-
 ?>

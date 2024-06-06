@@ -1,12 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-
 session_start();
-if(!isset($_SESSION["email_address"])){
-    header("location:../login.html");
+if (!isset($_SESSION["email_address"])) {
+    echo "<script>window.location.href = '../login.html';</script>";
+    exit(); // Asegura que el script se detenga después de redirigir
+}
 
-} 
+require_once("include/connection.php");
+
+// Obtén la información del usuario
+$id = mysqli_real_escape_string($conn, $_SESSION['email_address']);
+$r = mysqli_query($conn, "SELECT * FROM login_user WHERE id = '$id'") or die(mysqli_error($conn));
+$row = mysqli_fetch_array($r);
+
+// Verifica la carrera y la sede del usuario
+$carrera = $row['carrera']; // Asegúrate de que el nombre de la columna sea correcto
+$sede = $row['sede']; // Asegúrate de que el nombre de la columna sea correcto
+
+if ($carrera != 'Ingeniería Civil Industrial' || $sede != 'Sede Talca') {
+    // El usuario no tiene permisos para acceder
+    echo "<script>alert('No tienes permisos para acceder a esta página.');";
+    echo "window.history.back();</script>";
+    exit();   
+}
+
+$user_id = $id;
+$queryRamos = "
+SELECT r.id, r.nombre_ramo 
+FROM ramos r
+INNER JOIN usuarios_ramos ur ON r.id = ur.ramo_id 
+WHERE ur.user_id = '$user_id'
+";
+$result_ramos = mysqli_query($conn, $queryRamos) or die(mysqli_error($conn));
+
 ?>
 <head>
   <meta charset="utf-8">
@@ -46,12 +73,7 @@ if(!isset($_SESSION["email_address"])){
     </script>
     <style type="text/css">
       /* Estilos para el contenedor del sidebar */
-      .sidebar-fixed {
-        background-color: #343a40; /* Color de fondo del sidebar */
-        color: #fff; /* Color del texto en el sidebar */
-        width: 250px; /* Ancho del sidebar */
-        padding-top: 20px; /* Espaciado superior */
-        }
+      
 
         /* Estilos para el logo */
         .logo-wrapper img {
@@ -91,7 +113,6 @@ if(!isset($_SESSION["email_address"])){
         .list-group-item:visited {
         background-color: #dd211c;
         }
-
         /* Estilos para el enlace al pasar el mouse */
         .list-group-item.list-group-item-action.waves-effect:hover {
         background-color: #dd211c;
@@ -136,6 +157,48 @@ height:0;
         background: url('img/lg.flip-book-loader.gif') 50% 50% no-repeat rgb(249,249,249);
         opacity: 1;
     }
+    .sidebar-fixed {
+        background-color: #343a40; /* Color de fondo del sidebar */
+        color: #fff; /* Color del texto en el sidebar */
+        height: 100vh; /* Altura del sidebar para ocupar toda la pantalla vertical */
+        width: 250px; /* Ancho del sidebar */
+        position: fixed; /* Mantener fijo */
+        top: 0;
+        left: 0; /* Alineado a la izquierda */
+        padding-top: 130px; /* Espaciado superior */
+        z-index: 1; /* Asegura que esté encima del contenido */
+        overflow-y: auto; /* Agrega desplazamiento vertical si es necesario */
+        transition: width 0.3s ease; /* Agrega una transición suave */
+    }
+        #content {
+        margin-left: 250px; /* Margen izquierdo para dejar espacio al sidebar */
+        padding: 15px;
+        transition: margin-left 0.3s ease; /* Transición suave para el margen izquierdo */
+    }
+    @media (max-width: 768px) {
+    /* Estilo para el botón de hamburguesa en el navbar */
+    .navbar-toggler {
+        display: block; /* Mostrar el botón de hamburguesa en dispositivos pequeños */
+    }
+
+    /* Ocultar el sidebar por defecto en pantallas más pequeñas */
+    .sidebar-fixed {
+        width: 0;
+        /* ... (otros estilos de ocultamiento) ... */
+    }
+
+    /* Estilos para el contenido principal */
+    #content {
+        margin-left: 0; /* Ajustar el margen para el contenido principal */
+    }
+
+    /* Mostrar el sidebar cuando está activo (al hacer clic en la hamburguesa) */
+    .sidebar-fixed.active {
+        width: 250px; /* Ancho del sidebar */
+        /* ... (otros estilos al activar) ... */
+    }
+
+}
   </style>
 
     <script src="jquery.min.js"></script>
@@ -167,7 +230,7 @@ height:0;
 
    $id=$row['email_address'];
    $user_status=$row['user_status'];
-   $name=$row['name'];
+   $email_address=$row['email_address'];
    // $lname=$row['lname'];
 
 ?>
@@ -186,7 +249,6 @@ height:0;
                         <font color="white">Bienvenido!,</font> <?php echo ucwords(htmlentities($id)); ?> <i class="fas fa-user-circle"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-                        <a class=> <i class="fas fa-chalkboard-teacher"></i> Usuario logeado</a>
                         <a class="dropdown-item" href="Logout.php"><i class="fas fa-sign-in-alt"></i> Cerrar sesión</a>
                     </div>
                 </li>
@@ -200,14 +262,17 @@ height:0;
 <div class="sidebar-fixed position-fixed">
     <div class="list-group list-group-flush">
         <a href="home2.php" class="list-group-item list-group-item-action waves-effect">
-            <i class="fas fa-folder-open"></i> Ver archivos cargados
+            <i class="fas fa-folder-open mr-3"></i>Ver archivos cargados
         </a>
-        <a href="add_file2.php" class="list-group-item list-group-item-action waves-effect">
-            <i class="fas fa-file-medical"></i> Agregar documentos
+        <a href="#" class="list-group-item list-group-item-action waves-effect">
+            <i class="fas fa-file-medical mr-3"></i>Agregar documentos
         </a>
         <a href="perfil2.php" class="list-group-item list-group-item-action waves-effect">
             <i class="fas fa-user mr-3"></i>Perfil
         </a>
+        <!-- <a href="recibidos.php" class="list-group-item list-group-item-action waves-effect">
+            <i class="fas fa-share-alt"></i> Archivos recibidos 
+        </a> -->
     </div>
 </div>
 
@@ -260,41 +325,48 @@ height:0;
   <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalRegisterForm">Launch
     Modal Register Form</a>
 </div> -->
-  <center>
- <div class="text-center col-md-4">
-<div class="card">
-<h5 class="card-header info-color white-text text-center py-4">
-  <strong>Subir documentos</strong>
-  </h5>
-  <div class="card-body px-lg-5 pt-0">
-    <div class="container">
-      <div class="row"><br>
-        <form action="fileprocess2.php" method="post" enctype="multipart/form-data" >
-          <div class="col-md-11">
-              <div class="md-form mb-0">
-                <input type="hidden" name= "email" value="<?php echo ucwords(htmlentities($name)); ?>" class="form-control" readonly="">
-                <input type="text" value="<?php echo ucwords(htmlentities($user_status)); ?>" class="form-control" readonly="">
-              </div>
-            </div>
-           <label for="subject" class="">Subir archivo</label>
-          <input type="file" name="myfile"> <br>
-          <button  type="submit" class="btn btn-info btn-rounded btn-block my-4 waves-effect z-depth-0"  name="save" type="submit">Subir Archivo</button>
-          <footer style="font-size: 11px"><b>Tipos de archivos permitidos:</b><font color="red"><i>.docx .doc .pptx .ppt .xlsx .xls .pdf .odt</i></font></footer>
-        </form>
-      </div>
-
-    </div>
-  </div>
+<center>
+    <div class="text-center col-md-4">
+      <div class="card">
+        <h5 class="card-header info-color white-text text-center py-4">
+          <strong>Subir documentos</strong>
+        </h5>
+        <div class="card-body px-lg-5 pt-0">
+          <form action="fileprocess2.php" method="post" enctype="multipart/form-data">
+            <!-- Campo para seleccionar el ramo -->
+            
+            <div class="md-form">
+            Ramo:
+  <select name="ramo_id" id="ramo_id" class="form-control">
+    
+    <option value="" selected disabled>Seleccionar ramo</option>
+    <?php while($ramo = mysqli_fetch_assoc($result_ramos)): ?>
+      <option value="<?= htmlspecialchars($ramo['id']); ?>"><?= htmlspecialchars($ramo['nombre_ramo']); ?></option>
+    <?php endwhile; ?>
+  </select>
 </div>
 
-<!-- Material form login -->
-   <Br>
-</div></div>
- </center>
+            <label for="subject" class="">Correo:</label>
+            <input type="email" name="email" value="<?php echo htmlspecialchars($email_address); ?>" required readonly>
+
+
+            <br>
+           
+            <br>
+            <input type="file" name="myfile"> <br>
+            <button type="submit" class="btn btn-info btn-rounded btn-block my-4 waves-effect z-depth-0" name="save">Subir Archivo</button>
+            <footer style="font-size: 11px"><b>Tipos de archivos permitidos:</b><font color="red"><i>.pdf .docx .doc .pptx .ppt .xlsx .xls .odt .jpg .png .jpeg</i></font></footer>
+          </form>
+        </div>
+      </div>
+    </div>
+  </center>
 
     <div class="footer-copyright py-3">
+    <center>
  <p>Todos los derechos reservados &copy; <?php echo date('Y');?> </p>
     </div>
+    </center>
     <!--/.Copyright-->
 
   </footer>
@@ -367,6 +439,19 @@ height:0;
    };
    
 
-   
+   document.addEventListener("DOMContentLoaded", function() {
+        const sidebar = document.querySelector('.sidebar-fixed');
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+
+        toggleBtn.addEventListener('click', function() {
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'block';
+                toggleBtn.textContent = 'Ocultar Menú';
+            } else {
+                sidebar.style.display = 'none';
+                toggleBtn.textContent = 'Mostrar Menú';
+            }
+        });
+    });
    
 </script>

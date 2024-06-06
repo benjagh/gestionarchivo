@@ -288,10 +288,37 @@ input[type=file] {
           <label data-error="X" data-success="✓" for="orangeForm-pass">Contraseña</label>
         </div>
 
-        <div class="md-form mb-4">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input type="text" id="orangeForm-pass" name="admin_status" value = "Admin" class="form-control validate" readonly="">
-          <label data-error="X" data-success="✓" for="orangeForm-pass">Tipo de usuario</label>
+        <div class="md-form mb-5">
+            <i class="fas fa-user prefix grey-text"></i><br><br>
+            <select id="orangeForm-tipo" name="admin_status" class="form-control validate" required="" style="margin-left: 0.5rem;">
+              <option value="" disabled selected></option>
+              <option value="Admin">Admin</option>
+              <option value="Decano">Decano</option>
+              <option value="Secretaria">Secretaria</option>
+            </select>
+            <label data-error="X" data-success="✓" for="orangeForm-sede">Tipo de Usuario</label>
+          </div>
+        
+        <div class="md-form mb-5">
+            <i class="fas fa-university prefix grey-text"></i><br><br>
+            <select id="orangeForm-carrera" name="carrera" class="form-control validate" style="margin-left: 0.5rem;" onchange="updateSedeOptions()">
+              <option value="" disabled selected></option>
+              <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
+              <option value="Ingeniería Civil Química">Ingeniería Civil Química</option>
+              <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
+            </select>
+            <label data-error="X" data-success="✓" for="orangeForm-carrera">Carrera</label>
+        </div>
+
+        <div class="md-form mb-5">
+            <i class="fas fa-university prefix grey-text"></i><br><br>
+            <select id="orangeForm-sede" name="sede" class="form-control validate" style="margin-left: 0.5rem;">
+              <option value="" disabled selected></option>
+              <option value="Sede Temuco">Sede Temuco</option>
+              <option value="Sede Talca">Sede Talca</option>
+              <option value="Sede Santiago">Sede Santiago</option>
+            </select>
+            <label data-error="X" data-success="✓" for="orangeForm-sede">Sede</label>
         </div>
 
 
@@ -303,6 +330,56 @@ input[type=file] {
   </div>
 </div>
 </form>
+
+<script>
+
+function updateSedeOptions() {
+        var carreraSelect = document.getElementById("orangeForm-carrera");
+        var sedeSelect = document.getElementById("orangeForm-sede");
+
+        // Obtener el valor seleccionado de la carrera
+        var selectedCarrera = carreraSelect.options[carreraSelect.selectedIndex].value;
+
+        // Limpiar las opciones actuales de la sede
+        sedeSelect.innerHTML = '<option value="" disabled selected></option>';
+
+        // Añadir la opción de "Sede Santiago" solo si la carrera seleccionada es "Ingeniería Civil Química"
+        if (selectedCarrera === "Ingeniería Civil Química") {
+            sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+        } else {
+            // Añadir las opciones para las otras carreras
+            sedeSelect.innerHTML += '<option value="Sede Temuco">Sede Temuco</option>';
+            sedeSelect.innerHTML += '<option value="Sede Talca">Sede Talca</option>';
+            sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+        }
+    }
+    
+  document.addEventListener("DOMContentLoaded", function () {
+    // Obtener elementos del DOM
+    var tipoUsuarioSelect = document.getElementById("orangeForm-tipo");
+    var carreraSection = document.getElementById("orangeForm-carrera").closest(".md-form");
+    var sedeSection = document.getElementById("orangeForm-sede").closest(".md-form");
+
+    // Ocultar secciones al cargar la página
+    carreraSection.style.display = "none";
+    sedeSection.style.display = "none";
+
+    // Agregar un evento de cambio al campo "Tipo de Usuario"
+    tipoUsuarioSelect.addEventListener("change", function () {
+      // Obtener el valor seleccionado
+      var tipoUsuario = tipoUsuarioSelect.value;
+
+      // Mostrar u ocultar las secciones según el valor seleccionado
+      if (tipoUsuario === "Admin") {
+        carreraSection.style.display = "block";
+        sedeSection.style.display = "block";
+      } else {
+        carreraSection.style.display = "none";
+        sedeSection.style.display = "none";
+      }
+    });
+  });
+</script>
 <!--end modaladmin-->
   <!--Add user-->
   <div class="modal fade" id="modalRegisterForm2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -321,59 +398,64 @@ input[type=file] {
             <input type="text" id="orangeForm-name" name="name" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-name">Nombre</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-envelope prefix grey-text"></i>
             <input type="email" id="orangeForm-email" name="email_address" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-email">Correo</label>
           </div>
+
           <div class="md-form mb-4">
             <i class="fas fa-lock prefix grey-text"></i>
             <input type="password" id="orangeForm-pass" name="user_password" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-pass">Contraseña</label>
           </div>
+
           <div class="md-form mb-4">
             <i class="fas fa-user prefix grey-text"></i><br><br>
             <label data-error="X" data-success="✓" for="orangeForm-user_status">Tipo de usuario</label>
             <select id="orangeForm-user_status" name="user_status" class="form-control validate" required="" style="margin-left: 0.5rem;">
               <option value="" disabled selected></option>
               <option value="Profesor">Profesor(a)</option>
-              <option value="Secretaria">Secretaria(o)</option>
               <option value="Presidente">Presidente Comité</option>
-              <option value="Director">Director</option>
-              <option value="Decano">Decano</option>
-            </select>
-            
+              <option value="Secretario(a) de Estudios">Secretario(a) de Estudios</option>
+            </select>  
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-calendar-alt prefix grey-text"></i>
             <input type="date" id="orangeForm-date" name="fecha_de_nacimiento" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-date">Fecha de Nacimiento</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-id-card prefix grey-text"></i>
             <input type="text" id="orangeForm-rut" name="rut" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-rut">RUT</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-university prefix grey-text"></i><br><br>
-            <select id="orangeForm-carrera" name="carrera" class="form-control validate" required="" style="margin-left: 0.5rem;">
+            <select id="carrera" name="carrera" class="form-control validate" required="" style="margin-left: 0.5rem;" onchange="updateSede()">
               <option value="" disabled selected></option>
               <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
               <option value="Ingeniería Civil Química">Ingeniería Civil Química</option>
               <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
             </select>
-            <label data-error="X" data-success="✓" for="orangeForm-carrera">Carrera</label>
+            <label data-error="X" data-success="✓" for="carrera">Carrera</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-university prefix grey-text"></i><br><br>
-            <select id="orangeForm-sede" name="sede" class="form-control validate" required="" style="margin-left: 0.5rem;">
+            <select id="sede" name="sede" class="form-control validate" required="" style="margin-left: 0.5rem;">
               <option value="" disabled selected></option>
               <option value="Sede Temuco">Sede Temuco</option>
               <option value="Sede Talca">Sede Talca</option>
               <option value="Sede Santiago">Sede Santiago</option>
             </select>
-            <label data-error="X" data-success="✓" for="orangeForm-sede">Sede</label>
+            <label data-error="X" data-success="✓" for="sede">Sede</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-image prefix grey-text"></i>
             <input type="file" id="orangeForm-foto" name="foto_de_perfil" class="form-control-file" required="">
@@ -387,6 +469,67 @@ input[type=file] {
     </div>
   </form>
 </div>
+
+<script>
+  
+    function updateSede() {
+        var carreraSelect = document.getElementById("carrera");
+        var sedeSelect = document.getElementById("sede");
+
+        // Obtener el valor seleccionado de la carrera
+        var selectedCarrera = carreraSelect.options[carreraSelect.selectedIndex].value;
+
+        // Limpiar las opciones actuales de la sede
+        sedeSelect.innerHTML = '<option value="" disabled selected></option>';
+
+        // Añadir la opción de "Sede Santiago" solo si la carrera seleccionada es "Ingeniería Civil Química"
+        if (selectedCarrera === "Ingeniería Civil Química") {
+            sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+        } else {
+            // Añadir las opciones para las otras carreras
+            sedeSelect.innerHTML += '<option value="Sede Temuco">Sede Temuco</option>';
+            sedeSelect.innerHTML += '<option value="Sede Talca">Sede Talca</option>';
+            sedeSelect.innerHTML += '<option value="Sede Santiago">Sede Santiago</option>';
+        }
+    }
+
+    function validarRut(rut) {
+      var rutRegex = /^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])|(\d{8}-[\dkK])$/;
+
+      if (!rut.match(rutRegex)) {
+        return false; // El RUT no cumple con el formato
+      }
+
+      var rutPartes = rut.split('-');
+      var rutNumero = rutPartes[0].replace(/\./g, '');
+      var rutVerificador = rutPartes[1];
+
+      var suma = 0;
+      var multiplo = 2;
+
+      for (var i = rutNumero.length - 1; i >= 0; i--) {
+        suma += parseInt(rutNumero.charAt(i)) * multiplo;
+        multiplo = multiplo === 7 ? 2 : multiplo + 1;
+      }
+
+      var resultado = suma % 11 === 0 ? 0 : 11 - (suma % 11);
+      var verificador = rutVerificador.toLowerCase() === 'k' ? 10 : parseInt(rutVerificador);
+
+      return resultado === verificador;
+    }
+
+    function validarFormulario() {
+      var rutInput = document.getElementById("orangeForm-rut");
+      var rut = rutInput.value;
+
+      if (!validarRut(rut)) {
+        alert("El RUT ingresado no es válido.");
+        return false;
+      }
+
+      return true;
+    }
+  </script>
 <!--end modaluser-->
 </form>
   </header>

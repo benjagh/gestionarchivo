@@ -32,6 +32,13 @@
       background: url('img/cargando.gif') 50% 50% no-repeat rgb(249, 249, 249);
       opacity: 1;
     }
+    .eye-icon-container {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
   </style>
 </head>
 
@@ -74,16 +81,39 @@
             <label for="materialFormCardEmailEx" class="font-weight-light">Correo:</label>
           </div>
           <!-- Material input password -->
-          <div class="md-form">
+          <div class="md-form position-relative">
             <i class="fa fa-lock prefix grey-text"></i>
             <input type="password" id="materialFormCardPasswordEx" name="user_password" class="form-control">
             <label for="materialFormCardPasswordEx" class="font-weight-light">Contraseña:</label>
+            <!-- Contenedor para el ícono del ojo -->
+            <div class="eye-icon-container">
+              <!-- Botón para mostrar/ocultar contraseña -->
+              <button type="button" class="btn btn-link" id="showPasswordBtn">
+                <i id="eyeOpen" class="fa fa-eye"></i>
+                <i id="eyeClosed" class="fa fa-eye-slash" style="display: none;"></i>
+              </button>
+            </div>
           </div>
-
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="rememberCheckbox" name="remember">
+            <label class="form-check-label" for="rememberCheckbox">Recordar Contraseña</label>
+          </div>
+          
+          <h3>Resuelva el Captcha</h3>
+          <center><img id="captchaImage" src="captcha.php" />
+            <br>
+            <br>
+            <button id="refreshCaptcha" class="btn btn-success">Generar Nuevo</button>
+          </center>
+          
+          <br />
+          <br />
+          <div class="form-group">
+            <input type="text" class="form-control" name="captcha" required="required"/>
           <div class="text-center py-4 mt-3">
             <button class="btn btn-danger btn-lg btn-block" name="logIn" id="login" type="submit">Iniciar sesión</button>
           </div>
-          
+        </div>
 
         </form>
         <!-- Material form register -->
@@ -103,6 +133,8 @@
   <!-- /Start your project here -->
 
   <!-- SCRIPTS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   <!-- JQuery -->
   <script type="text/javascript" src="js/jquery-3.4.0.min.js"></script>
   <!-- Bootstrap tooltips -->
@@ -111,6 +143,30 @@
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="js/mdb.min.js"></script>
+ 
+  <!--captcha-->
+  <script type="text/javascript">
+ 
+ $(document).ready(function() {
+    // Al cargar la página, inicializar el captcha
+    initializeCaptcha();
+
+    // Manejo del clic en el botón de generar nuevo captcha
+    $("#refreshCaptcha").on("click", function(e) {
+      e.preventDefault();
+      initializeCaptcha();
+    });
+
+    // Función para inicializar el captcha
+    function initializeCaptcha() {
+      var randomNumber = new Date().getTime();
+      $("#captchaImage").attr("src", "captcha.php?" + randomNumber);
+      $("input[name='captcha']").val('');
+    }
+  });
+
+  </script>
+  <!--captcha-->
 </body>
 
 <script type="text/javascript">
@@ -152,6 +208,26 @@
 
   };
 
+  $(document).ready(function() {
+  $("#showPasswordBtn").on("click", function() {
+    var passwordField = $("#materialFormCardPasswordEx");
+    var eyeOpen = $("#eyeOpen");
+    var eyeClosed = $("#eyeClosed");
+
+    // Cambia el tipo del campo de contraseña entre "password" y "text"
+    var fieldType = passwordField.attr("type");
+    passwordField.attr("type", fieldType === "password" ? "text" : "password");
+
+    // Cambia la visibilidad de los íconos de ojo abierto y cerrado
+    if (fieldType === "password") {
+      eyeOpen.hide();
+      eyeClosed.show();
+    } else {
+      eyeOpen.show();
+      eyeClosed.hide();
+    }
+  });
+});
 
 </script>
 <script src="jss/jquery.js"></script>
