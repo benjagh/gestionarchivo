@@ -23,7 +23,7 @@ if (isset($_POST['reg'])) {
     if ($v_checkadmin == 1) {
         echo '
             <script type = "text/javascript">
-                alert("Email Address already taken");
+                alert("El correo ya ha sido utilizado");
                 window.location = "dashboard.php";
             </script>
         ';

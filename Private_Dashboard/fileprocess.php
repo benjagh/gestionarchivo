@@ -50,12 +50,12 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
             if (mysqli_query($conn, $sql)) {
                 echo '
                     <script type="text/javascript">
-                        alert("File uploaded successfully");
+                        alert("Archivo subido exitosamente");
                         window.location = "add_document.php";
                     </script>';
             }
         } else {
-            echo "Failed to upload the file!";
+            echo "Error al subir el archivo";
         }
     }
 }

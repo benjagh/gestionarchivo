@@ -250,6 +250,8 @@ position:absolute;
         <a href="dashboard.php" class="list-group-item active waves-effect">
           <i class="fas fa-chart-pie mr-3"></i>Dashboard
         </a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect" data-toggle="modal" data-target="#modalAgregarRamo">
+        <i class="fas fa-book mr-3"></i>Agregar ramo</a>
          <a href="#" class="list-group-item list-group-item-action waves-effect"  data-toggle="modal" data-target="#modalRegisterForm">
           <i class="fas fa-user mr-3"></i>Agregar administradores</a>
             <a href="view_admin.php" class="list-group-item list-group-item-action waves-effect">
@@ -434,7 +436,7 @@ function updateSedeOptions() {
               <option value="" disabled selected></option>
               <option value="Profesor">Profesor(a)</option>
               <option value="Presidente">Presidente Comité</option>
-              <option value="Secretario(a) de Estudios">Secretario(a) de Estudios</option>
+              <option value="Secretaria(o) de Estudios">Secretaria(o) de Estudios</option>
             </select>
           </div>
 
@@ -447,7 +449,7 @@ function updateSedeOptions() {
           <div class="md-form mb-5">
             <i class="fas fa-id-card prefix grey-text"></i>
             <input type="text" id="orangeForm-rut" name="rut" class="form-control validate" required="">
-            <label data-error="X" data-success="✓" for="orangeForm-rut">RUT</label>
+            <label data-error="X" data-success="✓" for="orangeForm-rut">RUT(ej: 19805806-8)</label>
           </div>
 
           <div class="md-form mb-5">
@@ -473,10 +475,15 @@ function updateSedeOptions() {
           </div>
 
           <div class="md-form mb-5">
-            <i class="fas fa-image prefix grey-text"></i>
-            <input type="file" id="orangeForm-foto" name="foto_de_perfil" class="form-control-file" required="">
-            <label data-error="X" data-success="✓" for="orangeForm-foto"></label>
-          </div>
+    <i class="fas fa-image prefix grey-text"></i>
+    <label data-error="X" data-success="✓" for="sede">Foto de perfil</label>
+    <br><br>
+     <span class="small text-muted">(Formatos permitidos: PNG, JPG, JPEG. Tamaño máximo: 2MB)</span>
+    <br><br><br><br>
+    <input type="file" id="orangeForm-foto" name="foto_de_perfil" class="form-control-file" accept=".jpg, .jpeg, .png" >
+</div>
+
+
         </div>
         <div class="modal-footer d-flex justify-content-center">
           <button class="btn btn-info" name="reguser">Agregar</button>
@@ -551,6 +558,209 @@ function updateSedeOptions() {
     <!-- Sidebar -->
 
   </header>
+  <div class="modal fade" id="modalAgregarRamo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form action="ramo.php" method="POST">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div style="text-align: center;">
+                        <button id="btnAgregar" class="btn btn-primary">Agregar Ramo</button>
+                        <button id="btnVer" class="btn btn-secondary">Ver Detalles del Ramo</button>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3" id="agregarRamoView">
+                    <!-- Campos para el ramo y código de ramo -->
+                    <div class="md-form mb-4">
+                        <i class="fas fa-book prefix grey-text"></i>
+                        <input type="text" id="nombreRamo" name="nombreRamo" class="form-control validate" required="">
+                        <label data-error="X" data-success="✓" for="nombreRamo">Nombre del Ramo</label>
+                    </div>
+                    <div class="md-form mb-4">
+                        <i class="fas fa-key prefix grey-text"></i>
+                        <input type="text" id="codigoRamo" name="codigoRamo" class="form-control validate" required="">
+                        <label data-error="X" data-success="✓" for="codigoRamo">Código del Ramo</label>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="periodoRamo" name="periodoRamo" required>
+                            <option value="" disabled selected>Elegir periodo</option>
+                            <option value="otoño">Otoño</option>
+                            <option value="primavera">Primavera</option>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="añoRamo" name="añoRamo" required>
+                            <option value="" disabled selected>Elegir año</option>
+                            <?php
+                            $currentYear = date("Y");
+                            for ($year = 2000; $year <= $currentYear; $year++) {
+                                echo "<option value=\"$year\">$year</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="nivelRamo" name="nivelRamo" required>
+                            <option value="" disabled selected>Elegir nivel</option>
+                            <?php
+                            for ($nivel = 1; $nivel <= 11; $nivel++) {
+                                echo "<option value=\"$nivel\">$nivel</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="sedeRamo" name="sedeRamo" required>
+                            <option value="" disabled selected>Elegir sede</option>
+                            <option value="Sede Temuco">Sede Temuco</option>
+                            <option value="Sede Talca">Sede Talca</option>
+                            <option value="Sede Santiago">Sede Santiago</option>
+                        </select>
+                    </div>
+                    <div class="md-form mb-4">
+                        <select class="browser-default custom-select" id="carreraRamo" name="carreraRamo" required>
+                            <option value="" disabled selected>Elegir carrera</option>
+                            <option value="Ingeniería Civil Química">Ingeniería Civil Química</option>
+                            <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
+                            <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
+                            <!-- Agrega más opciones según tus necesidades -->
+                        </select>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button class="btn btn-info" name="agregarRamo">Agregar</button>
+                    </div>
+                
+      
+
+
+                    
+                </div>
+          <div class="modal-body mx-3" id="verRamoView" style="display: none;">
+        <!-- Formulario para editar los detalles del ramo -->
+       <!-- Formulario para editar los detalles del ramo -->
+       <?php
+require_once("include/connection.php");
+
+// Obtener las sedes y carreras disponibles
+$sedes = ["Sede Temuco", "Sede Talca", "Sede Santiago"];
+$carreras = ["Ingeniería Civil Química", "Ingeniería Civil Informática", "Ingeniería Civil Industrial"];
+
+// Filtrar por sede y carrera seleccionadas
+$sedeSeleccionada = isset($_GET['sede']) ? $_GET['sede'] : null;
+$carreraSeleccionada = isset($_GET['carrera']) ? $_GET['carrera'] : null;
+
+$query = "SELECT * FROM ramos";
+if ($sedeSeleccionada && $carreraSeleccionada) {
+    $query .= " WHERE sede='$sedeSeleccionada' AND carrera='$carreraSeleccionada'";
+}
+
+$result = mysqli_query($conn, $query);
+
+// Botones de filtrar
+echo "<div class='mb-3'>";
+echo "<label for='sedeSeleccionada'><strong>Seleccionar Sede:</strong></label>";
+echo "<select id='sedeSeleccionada' name='sedeRamoEditar' class='browser-default custom-select'>";
+echo "<option value='' disabled selected>Seleccionar Sede</option>";
+foreach ($sedes as $sede) {
+    echo "<option value='$sede'>$sede</option>";
+}
+echo "</select>";
+echo "</div>";
+
+echo "<div class='mb-3'>";
+echo "<label for='carreraSeleccionada'><strong>Seleccionar Carrera:</strong></label>";
+echo "<select id='carreraSeleccionada' name='carreraRamoEditar' class='browser-default custom-select'>";
+echo "<option value='' disabled selected>Seleccionar Carrera</option>";
+foreach ($carreras as $carrera) {
+    echo "<option value='$carrera'>$carrera</option>";
+}
+echo "</select>";
+echo "</div>";
+
+// Botón de filtrar
+echo "<button type='button' id='filtrarBtn' class='btn btn-primary'>Filtrar</button>";
+
+$count = 0; // Inicializar la variable $count
+
+// Mostrar formularios filtrados
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<div class='ramo-form-container' data-form-index='$count' style='display: none;'>";
+    echo "<form action='ramo.php' method='POST' class='mb-3'>";
+    // Campos comunes
+    echo "<div class='mb-3'>";
+    echo "<label for='nombreRamoEditarNuevo'><strong>Nombre del Ramo:</strong></label>";
+    echo "<input type='hidden' name='nombreRamoEditar' value='".$row['nombre_ramo']."'>";
+    echo "<input type='text' name='nombreRamoEditarNuevo' value='".$row['nombre_ramo']."' class='form-control'>";
+    echo "</div>";
+
+    echo "<div class='mb-3'>";
+    echo "<label for='codigoRamoEditar'><strong>Código del Ramo:</strong></label>";
+    echo "<input type='text' name='codigoRamoEditar' value='".$row['codigo_ramo']."' class='form-control'>";
+    echo "</div>";
+
+     // Campos dinámicos
+     $camposDinamicos = ['año', 'nivel', 'periodo', 'sede', 'carrera'];
+
+     foreach ($camposDinamicos as $campo) {
+        echo "<div class='mb-3'>";
+        echo "<label for='{$campo}Seleccionado'><strong>".ucwords($campo).":</strong></label>";
+        echo "<input id='{$campo}Seleccionado' type='text' name='{$campo}RamoEditar' value='".$row[$campo]."' class='form-control' placeholder='".$row[$campo]."' readonly>";
+        echo "<select name='{$campo}RamoEditar' class='browser-default custom-select' style='display:none'>";
+        
+        switch ($campo) {
+            case 'año':
+                $currentYear = date('Y');
+                for ($i = 2000; $i <= $currentYear; $i++) {
+                    echo "<option value='$i' ".($row[$campo] == $i ? 'selected' : '').">$i</option>";
+                }
+                break;
+            case 'nivel':
+                for ($i = 1; $i <= 11; $i++) {
+                    echo "<option value='$i' ".($row[$campo] == $i ? 'selected' : '').">$i</option>";
+                }
+                break;
+            case 'periodo':
+                echo "<option value='otoño' ".($row[$campo] == 'otoño' ? 'selected' : '').">Otoño</option>";
+                echo "<option value='primavera' ".($row[$campo] == 'primavera' ? 'selected' : '').">Primavera</option>";
+                break;
+            case 'sede':
+                foreach ($sedes as $sede) {
+                    echo "<option value='$sede' ".($row[$campo] == $sede ? 'selected' : '').">$sede</option>";
+                }
+                break;
+            case 'carrera':
+                foreach ($carreras as $carrera) {
+                    echo "<option value='$carrera' ".($row[$campo] == $carrera ? 'selected' : '').">$carrera</option>";
+                }
+                break;
+        }
+
+        echo "</select>";
+        echo "<button type='button' class='btn btn-sm btn-primary editar' onclick='activarEdicionCampo(this, \"$campo\")'>Editar ".ucwords($campo)."</button>";
+        echo "<button type='button' class='btn btn-sm btn-secondary cancelar-edit' onclick='cancelarEdicionCampo(this, \"$campo\")' style='display:none'>Cancelar Edición</button>";
+        echo "</div>";
+    }
+
+    echo "<button type='submit' class='btn btn-sm btn-success' name='guardarEdicion'>Guardar</button>";
+    echo "<button type='submit' class='btn btn-sm btn-danger' name='eliminarRamo'>Eliminar</button><hr>";
+    echo "</form>";
+    echo "</div>";
+
+    $count++;
+}
+?>
+
+
+    </div>
+
+
+               
+            </div>
+        </div>
+    </form>
+</div>
   <!--Main Navigation-->
  <div id="loader"></div>
   <!--Main layout-->
@@ -594,6 +804,12 @@ function updateSedeOptions() {
             <?php
             require_once("include/connection.php");
 
+            // Contar el número de administradores
+            $count_query = "SELECT COUNT(*) as count FROM admin_login WHERE admin_status = 'Admin'";
+            $count_result = mysqli_query($conn, $count_query);
+            $count_row = mysqli_fetch_assoc($count_result);
+            $admin_count = $count_row['count'];
+
             $query = "SELECT * FROM admin_login";
             $result = mysqli_query($conn, $query);
             while ($rs = mysqli_fetch_array($result)) {
@@ -613,62 +829,62 @@ function updateSedeOptions() {
                         <a href="#modalRegisterFormsss?id=<?php echo $id; ?>" data-toggle="modal" data-target="#modalRegisterFormsss_<?php echo $id; ?>">
                             <i class="fas fa-user-edit"></i>
                         </a> |
-                        <a href="delete_admin.php?id=<?php echo htmlentities($rs['id']); ?>">
-                            <i class='far fa-trash-alt'></i>
-                        </a>
+                        <?php if ($admin_count > 1) { ?>
+                            <a href="delete_admin.php?id=<?php echo htmlentities($rs['id']); ?>">
+                                <i class='far fa-trash-alt'></i>
+                            </a>
+                        <?php } ?>
                     </td>
                 </tr>
 
                 <div class="modal fade" id="modalRegisterFormsss_<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Aquí puedes colocar el formulario para editar la información del usuario -->
-                <form action="edit_user.php" method="POST" >
-    <!-- Campos del formulario -->
-    <input type="hidden" name="user_id" value="<?php echo $id; ?>">
-    <div style="margin-bottom: 10px;">
-        <label for="user_name">Nombre:</label>
-        <input type="text" id="user_name" name="user_name" value="<?php echo $fname; ?>" style="width: 100%; box-sizing: border-box; padding: 8px;">
-    </div>
-    <div style="margin-bottom: 10px;">
-        <label for="user_username">Usuario:</label>
-        <input type="text" id="user_username" name="user_username" value="<?php echo $admin; ?>" style="width: 100%; box-sizing: border-box; padding: 8px;">
-    </div>
-    <div style="margin-bottom: 10px;">
-        <label for="user_password">Contraseña:</label>
-        <input type="password" id="user_password" name="user_password"  style="width: 100%; box-sizing: border-box; padding: 8px;">
-        Nota: Dejar contraseña en blanco si no quieres cambiarla.
-    </div>
-    <div style="margin-bottom: 10px;">
-    <label for="user_status">Estado:</label>
-        <select id="user_status" name="user_status" style="width: 100%; box-sizing: border-box; padding: 8px;">
-            <option value="Admin" <?php if ($status === 'Admin') echo 'selected'; ?>>Admin</option>
-            <option value="Decano" <?php if ($status === 'Decano') echo 'selected'; ?>>Decano</option>
-            <option value="Secretaria" <?php if ($status === 'Secretaria') echo 'selected'; ?>>Secretaria</option>
-        </select>
-    </div>
-    <!-- Agregar el campo name="edit" al botón de enviar -->
-    <input type="submit" name="edit" value="Guardar cambios" style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-</form>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Aquí puedes colocar el formulario para editar la información del usuario -->
+                                <form action="edit_user.php" method="POST">
+                                    <!-- Campos del formulario -->
+                                    <input type="hidden" name="user_id" value="<?php echo $id; ?>">
+                                    <div style="margin-bottom: 10px;">
+                                        <label for="user_name">Nombre:</label>
+                                        <input type="text" id="user_name" name="user_name" value="<?php echo $fname; ?>" style="width: 100%; box-sizing: border-box; padding: 8px;">
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <label for="user_username">Usuario:</label>
+                                        <input type="text" id="user_username" name="user_username" value="<?php echo $admin; ?>" style="width: 100%; box-sizing: border-box; padding: 8px;">
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <label for="user_password">Contraseña:</label>
+                                        <input type="password" id="user_password" name="user_password" style="width: 100%; box-sizing: border-box; padding: 8px;">
+                                        Nota: Dejar contraseña en blanco si no quieres cambiarla.
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <label for="user_status">Estado:</label>
+                                        <select id="user_status" name="user_status" style="width: 100%; box-sizing: border-box; padding: 8px;">
+                                            <option value="Admin" <?php if ($status === 'Admin') echo 'selected'; ?>>Admin</option>
+                                            <option value="Decano" <?php if ($status === 'Decano') echo 'selected'; ?>>Decano</option>
+                                            <option value="Secretaria" <?php if ($status === 'Secretaria') echo 'selected'; ?>>Secretaria</option>
+                                        </select>
+                                    </div>
+                                    <!-- Agregar el campo name="edit" al botón de enviar -->
+                                    <input type="submit" name="edit" value="Guardar cambios" style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <?php } ?>
         </tbody>
     </table>
     <hr>
 </div>
+
 
     <div class="footer-copyright py-3">
  <p>Todos los derechos reservados&copy; <?php echo date('Y');?> </p>
@@ -695,6 +911,102 @@ function updateSedeOptions() {
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css">
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/responsive/1.0.3/js/dataTables.responsive.js"></script>
+
+<!-- Scripts para manejar la interfaz del usuario -->
+<script>
+    document.getElementById('btnAgregar').addEventListener('click', function() {
+        document.getElementById('agregarRamoView').style.display = 'block';
+        document.getElementById('verRamoView').style.display = 'none';
+    });
+
+    document.getElementById('btnVer').addEventListener('click', function() {
+        document.getElementById('verRamoView').style.display = 'block';
+        document.getElementById('agregarRamoView').style.display = 'none';
+    });
+</script>
+
+<!-- Script de AJAX y manipulación del DOM --><script>
+    document.getElementById('btnAgregar').addEventListener('click', function() {
+        document.getElementById('agregarRamoView').style.display = 'block';
+        document.getElementById('verRamoView').style.display = 'none';
+    });
+
+    document.getElementById('btnVer').addEventListener('click', function() {
+        document.getElementById('verRamoView').style.display = 'block';
+        document.getElementById('agregarRamoView').style.display = 'none';
+    });
+
+    document.getElementById('sedeRamo').addEventListener('change', function() {
+        updateCarreras('carreraRamo', this.value);
+    });
+
+    document.getElementById('sedeSeleccionada').addEventListener('change', function() {
+        updateCarreras('carreraSeleccionada', this.value);
+    });
+
+    function updateCarreras(carreraId, sede) {
+        var carreraSelect = document.getElementById(carreraId);
+        carreraSelect.innerHTML = '<option value="" disabled selected>Elegir carrera</option>';
+        var carreras;
+
+        if (sede === 'Sede Temuco' || sede === 'Sede Talca') {
+            carreras = ['Ingeniería Civil Informática', 'Ingeniería Civil Industrial'];
+        } else if (sede === 'Sede Santiago') {
+            carreras = ['Ingeniería Civil Química', 'Ingeniería Civil Informática', 'Ingeniería Civil Industrial'];
+        }
+
+        carreras.forEach(function(carrera) {
+            var option = document.createElement('option');
+            option.value = carrera;
+            option.text = carrera;
+            carreraSelect.appendChild(option);
+        });
+    }
+
+    $(document).ready(function() {
+        $('.ramo-form-container').hide();
+
+        $('#filtrarBtn').on('click', function() {
+            var sedeSeleccionada = $('#sedeSeleccionada').val();
+            var carreraSeleccionada = $('#carreraSeleccionada').val();
+
+            $('.ramo-form-container').each(function() {
+                var formSede = $(this).find('[name="sedeRamoEditar"]').val();
+                var formCarrera = $(this).find('[name="carreraRamoEditar"]').val();
+
+                if ((sedeSeleccionada === '' || sedeSeleccionada === formSede) &&
+                    (carreraSeleccionada === '' || carreraSeleccionada === formCarrera)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+
+    function activarEdicionCampo(button, campo) {
+        var divCampo = button.parentNode.querySelector('#' + campo + 'Seleccionado');
+        var selectCampo = button.parentNode.querySelector('select[name=' + campo + 'RamoEditar]');
+        var cancelarEdicionBtn = button.parentNode.querySelector('.cancelar-edit');
+
+        divCampo.style.display = 'none';
+        selectCampo.style.display = 'block';
+        cancelarEdicionBtn.style.display = 'inline-block';
+        button.style.display = 'none';
+    }
+
+    function cancelarEdicionCampo(button, campo) {
+        var divCampo = button.parentNode.querySelector('#' + campo + 'Seleccionado');
+        var selectCampo = button.parentNode.querySelector('select[name=' + campo + 'RamoEditar]');
+        var cancelarEdicionBtn = button.parentNode.querySelector('.cancelar-edit');
+        var editarBtn = button.parentNode.querySelector('.editar');
+
+        divCampo.style.display = 'block';
+        selectCampo.style.display = 'none';
+        cancelarEdicionBtn.style.display = 'none';
+        editarBtn.style.display = 'inline-block';
+    }
+</script>
 
 </body>
   <!--modal--->

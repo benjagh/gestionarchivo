@@ -611,12 +611,13 @@ function updateSedeOptions() {
             <input type="text" id="orangeForm-name" name="name" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-name">Nombre</label>
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-envelope prefix grey-text"></i>
             <input type="email" id="orangeForm-email" name="email_address" class="form-control validate" required="">
             <label data-error="X" data-success="✓" for="orangeForm-email">Correo</label>
           </div>
-          
+
           <div class="md-form mb-4">
             <i class="fas fa-lock prefix grey-text"></i>
             <input type="password" id="orangeForm-pass" name="user_password" class="form-control validate" required="">
@@ -630,10 +631,10 @@ function updateSedeOptions() {
               <option value="" disabled selected></option>
               <option value="Profesor">Profesor(a)</option>
               <option value="Presidente">Presidente Comité</option>
-              <option value="Secretario(a) de Estudios">Secretario(a) de Estudios</option>
+              <option value="Secretaria(o) de Estudios">Secretaria(o) de Estudios</option>
             </select>
-            
           </div>
+
           <div class="md-form mb-5">
             <i class="fas fa-calendar-alt prefix grey-text"></i>
             <input type="date" id="orangeForm-date" name="fecha_de_nacimiento" class="form-control validate" required="">
@@ -643,7 +644,7 @@ function updateSedeOptions() {
           <div class="md-form mb-5">
             <i class="fas fa-id-card prefix grey-text"></i>
             <input type="text" id="orangeForm-rut" name="rut" class="form-control validate" required="">
-            <label data-error="X" data-success="✓" for="orangeForm-rut">RUT</label>
+            <label data-error="X" data-success="✓" for="orangeForm-rut">RUT(ej: 19805806-8)</label>
           </div>
 
           <div class="md-form mb-5">
@@ -669,10 +670,14 @@ function updateSedeOptions() {
           </div>
 
           <div class="md-form mb-5">
-            <i class="fas fa-image prefix grey-text"></i>
-            <input type="file" id="orangeForm-foto" name="foto_de_perfil" class="form-control-file" required="">
-            <label data-error="X" data-success="✓" for="orangeForm-foto"></label>
-          </div>
+    <i class="fas fa-image prefix grey-text"></i>
+    <label data-error="X" data-success="✓" for="sede">Foto de perfil</label>
+    <br><br>
+     <span class="small text-muted">(Formatos permitidos: PNG, JPG, JPEG. Tamaño máximo: 2MB)</span>
+    <br><br><br><br>
+    <input type="file" id="orangeForm-foto" name="foto_de_perfil" class="form-control-file" accept=".jpg, .jpeg, .png" >
+</div>
+
 
         </div>
         <div class="modal-footer d-flex justify-content-center">
@@ -860,6 +865,7 @@ function updateSede() {
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css">
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/responsive/1.0.3/js/dataTables.responsive.js"></script>
 
+<!-- Scripts para manejar la interfaz del usuario -->
 <script>
     document.getElementById('btnAgregar').addEventListener('click', function() {
         document.getElementById('agregarRamoView').style.display = 'block';
@@ -872,64 +878,51 @@ function updateSede() {
     });
 </script>
 
-<!-- Script de AJAX y manipulación del DOM -->
-<script>
-    document.getElementById('btnVer').addEventListener('click', function () {
-        var codigoRamo = document.getElementById('codigoRamo').value;
-
-        $.ajax({
-            url: 'obtener_detalles_ramo.php',
-            type: 'GET',
-            data: { codigo_ramo: codigoRamo },
-            success: function(response) {
-                var detallesRamo = JSON.parse(response);
-
-                document.getElementById('nombreRamoVer').innerText = detallesRamo.nombre_Ramo;
-                document.getElementById('codigoRamoVer').innerText = detallesRamo.codigo_ramo;
-                document.getElementById('periodoRamoVer').innerText = detallesRamo.periodo;
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
+<!-- Script de AJAX y manipulación del DOM --><script>
+    document.getElementById('btnAgregar').addEventListener('click', function() {
+        document.getElementById('agregarRamoView').style.display = 'block';
+        document.getElementById('verRamoView').style.display = 'none';
     });
 
-    // AJAX para obtener detalles del ramo con sede y carrera
-    document.getElementById('btnVer').addEventListener('click', function () {
-        var sedeSeleccionada = document.getElementById('sedeSeleccionada').value;
-        var carreraSeleccionada = document.getElementById('carreraSeleccionada').value;
-        var codigoRamo = document.getElementById('codigoRamo').value;
-
-        $.ajax({
-            url: 'obtener_detalles_ramo.php',
-            type: 'GET',
-            data: { codigo_ramo: codigoRamo, sede: sedeSeleccionada, carrera: carreraSeleccionada },
-            success: function (response) {
-                var detallesRamo = JSON.parse(response);
-
-                document.getElementById('nombreRamoVer').innerText = detallesRamo.nombre_Ramo;
-                document.getElementById('codigoRamoVer').innerText = detallesRamo.codigo_ramo;
-                document.getElementById('periodoRamoVer').innerText = detallesRamo.periodo;
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+    document.getElementById('btnVer').addEventListener('click', function() {
+        document.getElementById('verRamoView').style.display = 'block';
+        document.getElementById('agregarRamoView').style.display = 'none';
     });
-</script>
 
-<!-- Script de filtrado con jQuery -->
-<script>
+    document.getElementById('sedeRamo').addEventListener('change', function() {
+        updateCarreras('carreraRamo', this.value);
+    });
+
+    document.getElementById('sedeSeleccionada').addEventListener('change', function() {
+        updateCarreras('carreraSeleccionada', this.value);
+    });
+
+    function updateCarreras(carreraId, sede) {
+        var carreraSelect = document.getElementById(carreraId);
+        carreraSelect.innerHTML = '<option value="" disabled selected>Elegir carrera</option>';
+        var carreras;
+
+        if (sede === 'Sede Temuco' || sede === 'Sede Talca') {
+            carreras = ['Ingeniería Civil Informática', 'Ingeniería Civil Industrial'];
+        } else if (sede === 'Sede Santiago') {
+            carreras = ['Ingeniería Civil Química', 'Ingeniería Civil Informática', 'Ingeniería Civil Industrial'];
+        }
+
+        carreras.forEach(function(carrera) {
+            var option = document.createElement('option');
+            option.value = carrera;
+            option.text = carrera;
+            carreraSelect.appendChild(option);
+        });
+    }
+
     $(document).ready(function() {
-        // Ocultar todos los formularios al cargar la página
         $('.ramo-form-container').hide();
 
-        // Manejar el evento del botón de filtrar
         $('#filtrarBtn').on('click', function() {
             var sedeSeleccionada = $('#sedeSeleccionada').val();
             var carreraSeleccionada = $('#carreraSeleccionada').val();
 
-            // Mostrar solo los formularios que cumplen con la selección
             $('.ramo-form-container').each(function() {
                 var formSede = $(this).find('[name="sedeRamoEditar"]').val();
                 var formCarrera = $(this).find('[name="carreraRamoEditar"]').val();
@@ -944,7 +937,6 @@ function updateSede() {
         });
     });
 
-    // Scripts adicionales relacionados con la manipulación del DOM
     function activarEdicionCampo(button, campo) {
         var divCampo = button.parentNode.querySelector('#' + campo + 'Seleccionado');
         var selectCampo = button.parentNode.querySelector('select[name=' + campo + 'RamoEditar]');
@@ -968,6 +960,7 @@ function updateSede() {
         editarBtn.style.display = 'inline-block';
     }
 </script>
+
 
 </body>
 </html>
